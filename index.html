@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>حاسبة وصفات القهوة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ══ Background decoration ══ -->
+  <div class="bg-blobs" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- ══ Auth Screen (Initial) ══ -->
+  <div id="auth-screen" class="auth-screen active">
+    <div class="auth-container">
+      <div class="auth-header">
+        <span class="auth-logo">☕</span>
+        <h1 class="auth-title">حاسبة وصفات القهوة</h1>
+        <p class="auth-subtitle">احسب مقادير قهوتك المثالية</p>
+      </div>
+
+      <div class="auth-options">
+        <button class="auth-btn auth-btn-primary" id="btn-register" onclick="showRegisterForm()">
+          <span class="btn-icon">✍️</span>
+          <span class="btn-text">تسجيل جديد</span>
+          <span class="btn-desc">إنشاء حساب وحفظ وصفاتك</span>
+        </button>
+
+        <button class="auth-btn auth-btn-secondary" id="btn-login" onclick="showLoginForm()">
+          <span class="btn-icon">🔓</span>
+          <span class="btn-text">تسجيل دخول</span>
+          <span class="btn-desc">دخول بحسابك الموجود</span>
+        </button>
+
+        <button class="auth-btn auth-btn-tertiary" id="btn-guest" onclick="guestMode()">
+          <span class="btn-icon">👤</span>
+          <span class="btn-text">دخول سريع</span>
+          <span class="btn-desc">استخدم الوصفات الجاهزة</span>
+        </button>
+      </div>
+
+      <div class="auth-footer">
+        <p class="auth-footer-text">جميع البيانات محفوظة بأمان وخصوصية تامة</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Register Form ══ -->
+  <div id="register-form" class="auth-form-container" style="display:none">
+    <div class="auth-form">
+      <button class="form-back-btn" onclick="backToAuthScreen()">← رجوع</button>
+      <h2 class="form-title">إنشاء حساب جديد</h2>
+
+      <form id="register-form-element" onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label for="reg-name" class="form-label">الاسم الكامل</label>
+          <input type="text" id="reg-name" class="form-input" placeholder="أحمد محمد" required />
+        </div>
+
+        <div class="form-group">
+          <label for="reg-email" class="form-label">البريد الإلكتروني</label>
+          <input type="email" id="reg-email" class="form-input" placeholder="ahmed@example.com" required />
+        </div>
+
+        <div class="form-group">
+          <label for="reg-password" class="form-label">كلمة المرور</label>
+          <input type="password" id="reg-password" class="form-input" placeholder="••••••••" required />
+        </div>
+
+        <div class="form-group">
+          <label for="reg-password-confirm" class="form-label">تأكيد كلمة المرور</label>
+          <input type="password" id="reg-password-confirm" class="form-input" placeholder="••••••••" required />
+        </div>
+
+        <div id="register-error" class="form-error" style="display:none"></div>
+
+        <button type="submit" class="form-submit-btn">إنشاء الحساب</button>
+      </form>
+
+      <p class="form-footer-text">هل لديك حساب بالفعل؟ <a href="#" onclick="showLoginForm(); return false;">دخول هنا</a></p>
+    </div>
+  </div>
+
+  <!-- ══ Login Form ══ -->
+  <div id="login-form" class="auth-form-container" style="display:none">
+    <div class="auth-form">
+      <button class="form-back-btn" onclick="backToAuthScreen()">← رجوع</button>
+      <h2 class="form-title">تسجيل الدخول</h2>
+
+      <form id="login-form-element" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="login-email" class="form-label">البريد الإلكتروني</label>
+          <input type="email" id="login-email" class="form-input" placeholder="ahmed@example.com" required />
+        </div>
+
+        <div class="form-group">
+          <label for="login-password" class="form-label">كلمة المرور</label>
+          <input type="password" id="login-password" class="form-input" placeholder="••••••••" required />
+        </div>
+
+        <div id="login-error" class="form-error" style="display:none"></div>
+
+        <button type="submit" class="form-submit-btn">دخول</button>
+      </form>
+
+      <p class="form-footer-text">لا تملك حساب؟ <a href="#" onclick="showRegisterForm(); return false;">إنشاء حساب</a></p>
+    </div>
+  </div>
+
+  <!-- ══ Main App (Hidden initially) ══ -->
+  <div id="app-screen" class="app-screen" style="display:none">
+    <!-- Header with user info -->
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="logo">
+          <span class="logo-icon">☕</span>
+          <div class="logo-text">
+            <span class="logo-title">حاسبة القهوة</span>
+            <span class="logo-sub">Coffee Recipe Calculator</span>
+          </div>
+        </div>
+        <div class="header-user">
+          <span id="user-name-display" class="user-name">مستخدم</span>
+          <button class="logout-btn" onclick="logout()">تسجيل خروج</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-container">
+
+      <!-- Controls Card -->
+      <section class="card controls-card" aria-label="إعدادات التحضير">
+        <h2 class="card-title">
+          <span class="card-title-icon">⚙️</span>
+          إعدادات التحضير
+        </h2>
+
+        <div class="controls-grid">
+
+          <!-- Cups -->
+          <div class="control-group">
+            <label class="control-label" for="cups">
+              <span class="label-icon">🫙</span>
+              عدد الأكواب
+            </label>
+            <div class="input-wrapper">
+              <button class="qty-btn" id="btn-minus" aria-label="تقليل" onclick="adjustCups(-1)">−</button>
+              <input
+                type="number"
+                id="cups"
+                value="1"
+                min="1"
+                max="20"
+                step="1"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                autocomplete="off"
+                aria-label="عدد الأكواب"
+              />
+              <button class="qty-btn" id="btn-plus" aria-label="زيادة" onclick="adjustCups(1)">+</button>
+            </div>
+            <p id="error-msg" class="error-msg" role="alert" style="display:none"></p>
+          </div>
+
+          <!-- Method -->
+          <div class="control-group">
+            <label class="control-label" for="method">
+              <span class="label-icon">🔧</span>
+              طريقة التحضير
+            </label>
+            <div class="select-wrapper">
+              <select id="method" aria-label="طريقة التحضير">
+                <option value="">جاري التحميل...</option>
+              </select>
+              <span class="select-arrow">▾</span>
+            </div>
+          </div>
+
+          <!-- Serving -->
+          <div class="control-group">
+            <label class="control-label" for="serving">
+              <span class="label-icon">🌡️</span>
+              نوع التقديم
+            </label>
+            <div class="serving-toggle" role="group" aria-label="نوع التقديم">
+              <input type="radio" id="hot" name="serving" value="hot" checked />
+              <label for="hot" class="toggle-btn">☕ حار</label>
+              <input type="radio" id="iced" name="serving" value="iced" />
+              <label for="iced" class="toggle-btn">❄️ بارد</label>
+            </div>
+            <select id="serving" style="display:none" aria-hidden="true">
+              <option value="hot">حار</option>
+              <option value="iced">بارد</option>
+            </select>
+          </div>
+
+          <!-- Custom Temperature (for logged-in users) -->
+          <div class="control-group" id="temp-control" style="display:none">
+            <label class="control-label" for="custom-temp">
+              <span class="label-icon">🌡️</span>
+              درجة الحرارة المخصصة
+            </label>
+            <div class="input-wrapper-temp">
+              <input
+                type="number"
+                id="custom-temp"
+                value="93"
+                min="50"
+                max="100"
+                step="1"
+                class="form-input-temp"
+                placeholder="93"
+              />
+              <span class="temp-unit">°م</span>
+            </div>
+          </div>
+
+          <!-- Custom Coffee Amount (for logged-in users) -->
+          <div class="control-group" id="coffee-control" style="display:none">
+            <label class="control-label" for="custom-coffee">
+              <span class="label-icon">☕</span>
+              كمية البن المخصصة
+            </label>
+            <div class="input-wrapper-temp">
+              <input
+                type="number"
+                id="custom-coffee"
+                value="0"
+                min="0"
+                step="0.5"
+                class="form-input-temp"
+                placeholder="تلقائي"
+              />
+              <span class="temp-unit">جرام</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Save Recipe Button (for logged-in users) -->
+        <div id="save-recipe-section" style="display:none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--clr-border);">
+          <input
+            type="text"
+            id="recipe-name"
+            class="form-input"
+            placeholder="أسم الوصفة (مثال: قهوتي المفضلة)"
+            style="margin-bottom: 0.75rem;"
+          />
+          <button class="save-recipe-btn" onclick="saveRecipe()">
+            <span>💾</span>
+            <span>حفظ الوصفة</span>
+          </button>
+          <div id="save-status" class="save-status" style="display:none; margin-top: 0.75rem; text-align: center;"></div>
+        </div>
+      </section>
+
+      <!-- Results Section -->
+      <section id="results-section" class="results-section" style="display:none" aria-live="polite">
+
+        <!-- Method badges -->
+        <div class="result-badges">
+          <span class="badge badge-method" id="method-badge">V60</span>
+          <span class="badge badge-serving" id="serving-badge">☕ حار</span>
+        </div>
+
+        <!-- Stats grid -->
+        <div class="stats-grid">
+          <div class="stat-card stat-coffee">
+            <div class="stat-icon">☕</div>
+            <div class="stat-label">كمية البن</div>
+            <div class="stat-value" id="res-coffee">—</div>
+          </div>
+          <div class="stat-card stat-water">
+            <div class="stat-icon">💧</div>
+            <div class="stat-label">كمية الماء</div>
+            <div class="stat-value" id="res-water">—</div>
+          </div>
+          <div class="stat-card stat-ratio">
+            <div class="stat-icon">⚖️</div>
+            <div class="stat-label">نسبة الاستخلاص</div>
+            <div class="stat-value" id="res-ratio">—</div>
+          </div>
+          <div class="stat-card stat-volume">
+            <div class="stat-icon">🫗</div>
+            <div class="stat-label">الحجم الكلي</div>
+            <div class="stat-value" id="res-volume">—</div>
+          </div>
+          <div class="stat-card stat-time">
+            <div class="stat-icon">⏱️</div>
+            <div class="stat-label">وقت التحضير</div>
+            <div class="stat-value" id="res-time">—</div>
+          </div>
+          <div class="stat-card stat-grind">
+            <div class="stat-icon">⚙️</div>
+            <div class="stat-label">درجة الطحن</div>
+            <div class="stat-value" id="res-grind">—</div>
+          </div>
+          <div class="stat-card stat-temp">
+            <div class="stat-icon">🌡️</div>
+            <div class="stat-label">درجة الماء</div>
+            <div class="stat-value" id="res-temp">—</div>
+          </div>
+        </div>
+
+        <!-- Steps -->
+        <div class="card steps-card">
+          <h3 class="steps-title">
+            <span>📋</span>
+            خطوات التحضير
+          </h3>
+          <div id="steps-container" class="steps-container"></div>
+        </div>
+
+      </section>
+
+      <!-- Empty state -->
+      <div id="empty-state" class="empty-state">
+        <div class="empty-icon">☕</div>
+        <p class="empty-text">جاري تحميل البيانات...</p>
+      </div>
+
+    </main>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="cta-container">
+        <div class="cta-content">
+          <h2 class="cta-title">هل تريد تحسين قهوتك أكثر؟</h2>
+          <p class="cta-description">اطلب أفضل أنواع البن والمحاصيل من تاجركم الموثوق</p>
+          <a href="https://salla.sa/tagrkom" target="_blank" rel="noopener noreferrer" class="cta-button">
+            <span class="cta-icon">🛍️</span>
+            <span class="cta-text">اطلب الآن</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <p>حاسبة وصفات القهوة &mdash; جميع الحسابات تقريبية وتعتمد على كوب قياسي 240 مل</p>
+    </footer>
+  </div>
+
+  <script src="app-auth.js"></script>
+</body>
+</html>
