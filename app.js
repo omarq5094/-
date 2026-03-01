@@ -7,7 +7,7 @@
 const CONFIG = {
   defaultCupSizeMl: 240,
   waterDensity: 1,
-  googleSheetWebAppUrl: "https://script.google.com/macros/s/AKfycbwqX952xaL9h4zC-KYKMb0pigLzcn_hSvLnCpgXY4gjL6KMhRPmrwcoSXcYqBf83ToI/exec", // سيتم ملؤه من قبل المستخدم
+  googleSheetWebAppUrl: "https://script.google.com/macros/s/AKfycbz18HbSLYnMHdZ3hlO6NLN2MczCOlC3pmS95tjv-2zbCrJq8XBzEWZWetmAcqngw7j_/exec", // سيتم ملؤه من قبل المستخدم
 };
 
 // ── Brewing Methods Data ─────────────────────────────────────
